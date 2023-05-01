@@ -1,0 +1,33 @@
+
+import cv2 #open cv kütüphanesi
+
+face_cascade = cv2.CascadeClassifier(
+    r"classifier/haarcascade_frontalface_default.xml") # gerekli olan .xml dosyasının okunduğu alan
+
+cap = cv2.VideoCapture(r"photos/test.mp4")
+while cap.isOpened():
+    _,img = cap.read()
+    #Bir while döngüsü ve open cv'nin VideoCapture özelliğinin kullanıldığı alan
+    #VideoCapture fonksiyonun içerisinde yer alan parametre dahili ve harici kameralarınızı belirlemek için kullanılmaktadır. 
+    #Bilgisayarınızın kamerasını kullanmak için 0(sıfır), harici kameranız için ise 1 (bir) değerlerini kullanabilirsiniz.
+
+    #img = cv2.imread(r"photos/1588088785877.jpg")
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    #cvtColor:Görüntüyü bir renk uzayından diğerine dönüştürür.
+    
+    faces = face_cascade.detectMultiScale(gray,1.1,4)
+    #minimum kaç farklı çerçevede taranması gerektiğini anlayan komut
+
+    for(x,y,w,h) in faces:
+        cv2.rectangle(img,(x,y),(x+w, y+h),(0,255,0),3)
+    #rectangle:Tuval gibi çalışır.Tepe noktası,Karşı tepe noktası,(B , G ,R),Kalınlık gibi değişkenleri belirler.
+
+    cv2.imshow('img',img)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+    #cv2.waitKey():Bu metod, cv2.imshow() ile görüntülediğimiz resmin ekranda kalma süresini belirler. 
+    #Parantez içine ms cinsinden görüntünün ekranda kalma süresini belirleyebiliriz.
+
+cap.release()
+#Bu kod ise yakalanan nesneyi serbest bırakır.
+
